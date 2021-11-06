@@ -1,19 +1,11 @@
 
-import React, {useState} from 'react';
+import React, {useState , useEffect} from 'react';
 import * as Styled from './styles';
+import api from '../../services/api';
 
 
 /* IMAGENS */
 import Imagem from '../../Imgs/filter.png';
-import futebol from '../../Imgs/futebol.jpg';
-import viagem from '../../Imgs/viagem.png';
-import cinema from '../../Imgs/cinema.png';
-import lanche from '../../Imgs/lanche.jpg';
-import prova from '../../Imgs/prova.jpg';
-import academia from '../../Imgs/academia.jpg';
-import compra from '../../Imgs/compra.jpg';
-import trabalho from '../../Imgs/trabalho.png';
-
 
 
 /* COMPONENTES */
@@ -25,32 +17,61 @@ import TaskCard from '../../Components/TaskCard';
 
 function Home() {
 
-  const [filterActive, functionFilter] = useState();
+  const [filterActive, functionFilter] = useState('all');
+
+  const [tasks, setTasks] = useState([]);
+
+  async function loadTasks(){
+    await api.get(`/task//filter/${filterActive}/11:11:11:11:11:11`)
+    .then(response => {
+      setTasks(response.data)
+    })
+  } 
+
+  useEffect (() => {
+    loadTasks();
+  }, [filterActive])
 
   return (
     <Styled.Container>
       <Header />
        <Styled.ContainerFilter>
-       <button type='button' onClick={() => functionFilter('todos')}>
-       <Filter title="Todos" img={Imagem} actived={filterActive == 'todos'}/>
+       <button type='button' onClick={() => functionFilter('all')}>
+       <Filter title="Todos" img={Imagem} actived={filterActive == 'all'}/>
        </button>
 
-       <button type='button' onClick={() => functionFilter('hoje')}>
-       <Filter title="Hoje" img={Imagem} actived={filterActive == 'hoje'}/>
+       <button type='button' onClick={() => functionFilter('today')}>
+       <Filter title="Hoje" img={Imagem} actived={filterActive == 'today'}/>
        </button>
        
-       <button type='button' onClick={() => functionFilter('semana')}>
-       <Filter title="Semana" img={Imagem} actived={filterActive == 'semana'}/>
+       <button type='button' onClick={() => functionFilter('week')}>
+       <Filter title="Semana" img={Imagem} actived={filterActive == 'week'}/>
        </button>
 
-       <button type='button' onClick={() => functionFilter('mes')}>
-       <Filter title="Mês"  img={Imagem} actived={filterActive == 'mes'}/>
+       <button type='button' onClick={() => functionFilter('month')}>
+       <Filter title="Mês"  img={Imagem} actived={filterActive == 'month'}/>
        </button>
       
        </Styled.ContainerFilter>
 
        <Styled.ContainerCard>
-        <TaskCard img={futebol} title="Futebol"/>
+        
+        {
+        tasks.map(
+          t => (
+          <TaskCard type={t.type} title={t.title} when={t.when} />
+        ))
+      }
+       </Styled.ContainerCard>
+       
+      <Footer />
+    </Styled.Container>
+  )
+}
+export default Home;
+
+/* 
+      <TaskCard img={futebol} title="Futebol"/>
         <TaskCard img={viagem} title="Viagem"/>
         <TaskCard img={academia} title="Academia"/>
         <TaskCard img={lanche} title="Lanche"/>
@@ -58,11 +79,4 @@ function Home() {
         <TaskCard img={trabalho} title="Trablho"/>
         <TaskCard img={cinema} title="Cinema"/>
         <TaskCard img={compra} title="Compra"/>
-       </Styled.ContainerCard>
-
-
-      <Footer />
-    </Styled.Container>
-  )
-}
-export default Home;
+*/
