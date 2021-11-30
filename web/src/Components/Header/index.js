@@ -1,19 +1,20 @@
-
-import React from 'react';
+import React from 'react'
 import * as Styled from './styles'
+import { Link } from 'react-router-dom';
 
-function Header (){
-     return (
-         
-     <Styled.Container>
-         <Styled.Menu>
-              <a href="">INÍCIO</a>
-              <span className="barra"     />
-              <a href="">TAREFA</a>
-         </Styled.Menu>
-     </Styled.Container>
 
-     )
+function Header(){
+    return (
+        
+        <Styled.Container>
+            <Styled.Menu>
+                <Link to="/">INÍCIO</Link>
+                    <span className="barra"  />
+                <Link to="/task">TAREFA</Link>
+            </Styled.Menu>
+        </Styled.Container>
+
+    )
 
 }
 
